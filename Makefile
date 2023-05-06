@@ -4,16 +4,21 @@ run:
 lint:
 	golangci-lint run
 
-LOCAL_MIGRATION_DIR=./migrations
-LOCAL_MIGRATION_DSN="host=localhost port=5432 dbname=storage user=postgres password=postgres sslmode=disable"
+MIGRATION_DIR=./migrations
+TEST_MIGRATION_DIR=./migrations/test_data
+MIGRATION_DSN="host=localhost port=5432 dbname=storage user=postgres password=postgres sslmode=disable"
 
 migrate_status:
-	goose -dir ${LOCAL_MIGRATION_DIR} postgres ${LOCAL_MIGRATION_DSN} status -v
+	goose -dir ${MIGRATION_DIR} postgres ${MIGRATION_DSN} status -v
 
 migrate_up:
-	goose -dir ${LOCAL_MIGRATION_DIR} postgres ${LOCAL_MIGRATION_DSN} up -v
+	goose -dir ${MIGRATION_DIR} postgres ${MIGRATION_DSN} up -v
 
 migrate_down:
-	goose -dir ${LOCAL_MIGRATION_DIR} postgres ${LOCAL_MIGRATION_DSN} down -v
+	goose -dir ${MIGRATION_DIR} postgres ${MIGRATION_DSN} down -v
 
+test_migrate_up:
+	goose -dir ${TEST_MIGRATION_DIR} postgres ${MIGRATION_DSN} up -v
 
+test_migrate_down:
+	goose -dir ${TEST_MIGRATION_DIR} postgres ${MIGRATION_DSN} down -v

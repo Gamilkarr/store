@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS stores(
 CREATE TABLE IF NOT EXISTS items(
     id SERIAL PRIMARY KEY,
     name VARCHAR(20),
-    size INTEGER
+    size INTEGER,
+    quantity INTEGER
 );
 CREATE TABLE IF NOT EXISTS store_availability(
     store_id INTEGER NOT NULL,
