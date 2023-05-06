@@ -9,7 +9,7 @@ type ItemForReserved struct {
 	QuantityForReserved int64 `json:"quantity_for_reserved"`
 }
 
-func (s *StoreService) Reserved(storeID int64, items []ItemForReserved) error {
+func (s *StoreService) Reserved(storeID int64, items map[int64]int64) error {
 	if !s.repository.IsStoreAvailable(storeID) {
 		return errors.New("store is not available")
 	}

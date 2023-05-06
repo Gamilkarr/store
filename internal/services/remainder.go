@@ -8,11 +8,10 @@ type Item struct {
 	ReservedQuantity  int64 `json:"reserved_quantity"`
 }
 
-func (s *StoreService) Remainder(storeID int64) ([]Item, error) {
+func (s *StoreService) Remainder(storeID int64) ([]map[string]int64, error) {
 	if !s.repository.IsStoreAvailable(storeID) {
 		return nil, errors.New("store is not available")
 	}
-	var err error
 	items, err := s.repository.GetItemsQuantityOnStore(storeID)
 	if err != nil {
 		return nil, err
