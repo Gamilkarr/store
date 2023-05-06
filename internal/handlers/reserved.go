@@ -1,14 +1,20 @@
 package handlers
 
+import "github.com/Gamilkarr/store/internal/services"
+
 type ReservedRequest struct {
-	ItemsIDs []int64 `json:"items_ids"`
+	StoreID int64                      `json:"store_id"`
+	Items   []services.ItemForReserved `json:"items_ids"`
 }
 
 type ReservedResponse struct {
-	ItemsIDs []int64 `json:"items_ids"`
+	Status string `json:"status"`
 }
 
 func (s *Store) Reserved(req ReservedRequest, res *ReservedResponse) error {
-	res.ItemsIDs = req.ItemsIDs
+	if err := s.service.Reserved(req.StoreID, req.Items); err != nil {
+		return err
+	}
+	res.Status = "ok"
 	return nil
 }

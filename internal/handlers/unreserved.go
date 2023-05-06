@@ -1,14 +1,20 @@
 package handlers
 
+import "github.com/Gamilkarr/store/internal/services"
+
 type UnreservedRequest struct {
-	ItemsIDs []int64 `json:"items_ids"`
+	StoreID int64                        `json:"store_id"`
+	Items   []services.ItemForUnreserved `json:"items_ids"`
 }
 
 type UnreservedResponse struct {
-	ItemsIDs []int64 `json:"items_ids"`
+	Status string `json:"status"`
 }
 
 func (s *Store) Unreserved(req UnreservedRequest, res *UnreservedResponse) error {
-	res.ItemsIDs = append(res.ItemsIDs, req.ItemsIDs[0])
+	if err := s.service.Unreserved(req.StoreID, req.Items); err != nil {
+		return err
+	}
+	res.Status = "ok"
 	return nil
 }
