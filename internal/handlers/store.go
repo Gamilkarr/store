@@ -1,7 +1,7 @@
 package handlers
 
 type Store struct {
-	service Services
+	Service Services
 }
 
 type Services interface {

@@ -22,7 +22,7 @@ func (s *Store) Reserved(req ReservedRequest, res *ReservedResponse) error {
 		items[item.ItemID] = item.QuantityForReserved
 	}
 
-	if err := s.service.Reserved(req.StoreID, items); err != nil {
+	if err := s.Service.Reserved(req.StoreID, items); err != nil {
 		return err
 	}
 	res.Status = "ok"

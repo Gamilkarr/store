@@ -22,7 +22,7 @@ func (s *Store) Unreserved(req UnreservedRequest, res *UnreservedResponse) error
 		items[item.ItemID] = item.QuantityForUnreserved
 	}
 
-	if err := s.service.Unreserved(req.StoreID, items); err != nil {
+	if err := s.Service.Unreserved(req.StoreID, items); err != nil {
 		return err
 	}
 	res.Status = "ok"

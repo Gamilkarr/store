@@ -10,10 +10,10 @@ type ItemForUnreserved struct {
 }
 
 func (s *StoreService) Unreserved(storeID int64, items map[int64]int64) error {
-	if !s.repository.IsStoreAvailable(storeID) {
+	if !s.Repository.IsStoreAvailable(storeID) {
 		return errors.New("store is not available")
 	}
-	if err := s.repository.ItemUnreserved(storeID, items); err != nil {
+	if err := s.Repository.ItemUnreserved(storeID, items); err != nil {
 		return errors.New("error reserved")
 	}
 	return nil

@@ -1,19 +1,33 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"github.com/Gamilkarr/store/internal/handlers"
+	"github.com/Gamilkarr/store/internal/repository"
+	"github.com/Gamilkarr/store/internal/services"
+	"github.com/jackc/pgx/v5"
 	"io"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
 	"net/rpc/jsonrpc"
-
-	"github.com/Gamilkarr/store/internal/handlers"
 )
 
 func main() {
+	DBurl := "postgres://postgres:postgres@localhost:5432/storage"
+	conn, err := pgx.Connect(context.Background(), DBurl)
+	if err != nil {
+		fmt.Print(err)
+	}
+	defer conn.Close(context.Background())
+
 	server := rpc.NewServer()
-	if err := server.Register(new(handlers.Store)); err != nil {
+	if err := server.Register(handlers.Store{
+		Service: &services.StoreService{
+			Repository: &repository.Repository{
+				Conn: conn}}}); err != nil {
 		log.Fatal(err)
 	}
 
@@ -37,6 +51,7 @@ func main() {
 		}
 	})
 	log.Fatal(http.ListenAndServe("127.0.0.1:8081", nil))
+
 }
 
 type httpConn struct {

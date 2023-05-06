@@ -1,7 +1,7 @@
 package services
 
 type StoreService struct {
-	repository Repository
+	Repository Repository
 }
 
 type Repository interface {

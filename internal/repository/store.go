@@ -1,6 +1,10 @@
 package repository
 
-type Repository struct{}
+import "github.com/jackc/pgx/v5"
+
+type Repository struct {
+	Conn *pgx.Conn
+}
 
 // Надо хорошо подумать как сделать лучше:
 // вариант1: резервировать тот товар который есть и возвращать товар по которому не удалось создать резерв

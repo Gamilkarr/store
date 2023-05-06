@@ -9,10 +9,10 @@ type Item struct {
 }
 
 func (s *StoreService) Remainder(storeID int64) ([]map[string]int64, error) {
-	if !s.repository.IsStoreAvailable(storeID) {
+	if !s.Repository.IsStoreAvailable(storeID) {
 		return nil, errors.New("store is not available")
 	}
-	items, err := s.repository.GetItemsQuantityOnStore(storeID)
+	items, err := s.Repository.GetItemsQuantityOnStore(storeID)
 	if err != nil {
 		return nil, err
 	}

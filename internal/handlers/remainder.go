@@ -15,7 +15,7 @@ type Item struct {
 }
 
 func (s *Store) Remainder(req RemainderRequest, res *RemainderResponse) error {
-	items, err := s.service.Remainder(req.StoreID)
+	items, err := s.Service.Remainder(req.StoreID)
 	for _, item := range items {
 		res.Items = append(res.Items, Item{
 			ItemID:            item["itemID"],
