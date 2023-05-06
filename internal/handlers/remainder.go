@@ -9,16 +9,18 @@ type RemainderResponse struct {
 }
 
 type Item struct {
-	ItemID            int64 `json:"item_id"`
-	AvailableQuantity int64 `json:"available_quantity"`
-	ReservedQuantity  int64 `json:"reserved_quantity"`
+	ItemID            string `json:"item_id"`
+	Name              string `json:"name"`
+	AvailableQuantity string `json:"available_quantity"`
+	ReservedQuantity  string `json:"reserved_quantity"`
 }
 
 func (s *Store) Remainder(req RemainderRequest, res *RemainderResponse) error {
-	items, err := s.Service.Remainder(req.StoreID)
+	items, err := s.Repository.GetItemsQuantityOnStore(req.StoreID)
 	for _, item := range items {
 		res.Items = append(res.Items, Item{
 			ItemID:            item["itemID"],
+			Name:              item["name"],
 			AvailableQuantity: item["availableQuantity"],
 			ReservedQuantity:  item["reservedQuantity"],
 		})

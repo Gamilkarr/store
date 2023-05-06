@@ -2,7 +2,7 @@ package handlers
 
 type UnreservedRequest struct {
 	StoreID           int64               `json:"store_id"`
-	ItemForUnreserved []ItemForUnreserved `json:"items_ids"`
+	ItemForUnreserved []ItemForUnreserved `json:"items_for_unreserved"`
 }
 
 type UnreservedResponse struct {
@@ -10,19 +10,19 @@ type UnreservedResponse struct {
 }
 
 type ItemForUnreserved struct {
-	ItemID                int64 `json:"item_id"`
-	QuantityForUnreserved int64 `json:"quantity_for_reserved"`
+	ID       int64 `json:"id"`
+	Quantity int64 `json:"quantity"`
 }
 
 func (s *Store) Unreserved(req UnreservedRequest, res *UnreservedResponse) error {
-	var items map[int64]int64
+	items := make(map[int64]int64, len(req.ItemForUnreserved))
 
 	// учти что резерв не суммируется, а перезаписывается
 	for _, item := range req.ItemForUnreserved {
-		items[item.ItemID] = item.QuantityForUnreserved
+		items[item.ID] = item.Quantity
 	}
 
-	if err := s.Service.Unreserved(req.StoreID, items); err != nil {
+	if err := s.Repository.ItemUnreserved(req.StoreID, items); err != nil {
 		return err
 	}
 	res.Status = "ok"

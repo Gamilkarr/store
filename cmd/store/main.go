@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/Gamilkarr/store/internal/handlers"
 	"github.com/Gamilkarr/store/internal/repository"
-	"github.com/Gamilkarr/store/internal/services"
 	"github.com/jackc/pgx/v5"
 	"io"
 	"log"
@@ -24,10 +23,9 @@ func main() {
 	defer conn.Close(context.Background())
 
 	server := rpc.NewServer()
-	if err := server.Register(handlers.Store{
-		Service: &services.StoreService{
-			Repository: &repository.Repository{
-				Conn: conn}}}); err != nil {
+	if err := server.Register(&handlers.Store{
+		Repository: &repository.Repository{
+			Conn: conn}}); err != nil {
 		log.Fatal(err)
 	}
 

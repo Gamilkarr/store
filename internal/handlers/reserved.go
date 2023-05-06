@@ -2,7 +2,7 @@ package handlers
 
 type ReservedRequest struct {
 	StoreID          int64             `json:"store_id"`
-	ItemsForReserved []ItemForReserved `json:"items_ids"`
+	ItemsForReserved []ItemForReserved `json:"items_for_reserved"`
 }
 
 type ReservedResponse struct {
@@ -10,19 +10,19 @@ type ReservedResponse struct {
 }
 
 type ItemForReserved struct {
-	ItemID              int64 `json:"item_id"`
-	QuantityForReserved int64 `json:"quantity_for_reserved"`
+	ID       int64 `json:"id"`
+	Quantity int64 `json:"quantity"`
 }
 
 func (s *Store) Reserved(req ReservedRequest, res *ReservedResponse) error {
-	var items map[int64]int64
+	items := make(map[int64]int64, len(req.ItemsForReserved))
 
 	// учти что резерв не суммируется, а перезаписывается
 	for _, item := range req.ItemsForReserved {
-		items[item.ItemID] = item.QuantityForReserved
+		items[item.ID] = item.Quantity
 	}
 
-	if err := s.Service.Reserved(req.StoreID, items); err != nil {
+	if err := s.Repository.ItemReserved(req.StoreID, items); err != nil {
 		return err
 	}
 	res.Status = "ok"

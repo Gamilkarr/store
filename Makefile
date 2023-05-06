@@ -5,7 +5,7 @@ lint:
 	golangci-lint run
 
 MIGRATION_DIR=./migrations
-TEST_MIGRATION_DIR=./migrations/test_data
+TEST_MIGRATION_DIR=./migrations/test
 MIGRATION_DSN="host=localhost port=5432 dbname=storage user=postgres password=postgres sslmode=disable"
 
 migrate_status:
