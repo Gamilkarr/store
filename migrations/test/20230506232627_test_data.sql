@@ -11,7 +11,7 @@ INSERT INTO stores(name, availability)
            ('второй склад', TRUE),
            ('третий склад', TRUE);
 
-INSERT INTO store_availability(store_id, item_id, item_quantity, reserved_item)
+INSERT INTO available(store_id, item_id, item_quantity, reserved_item)
     VALUES (1, 3, 7, 0),
            (1, 1, 33, 8),
            (2, 1, 51, 23),
@@ -25,5 +25,5 @@ INSERT INTO store_availability(store_id, item_id, item_quantity, reserved_item)
 
 -- +goose Down
 -- +goose StatementBegin
-TRUNCATE store_availability, stores, items RESTART IDENTITY;
+TRUNCATE available, stores, items RESTART IDENTITY;
 -- +goose StatementEnd

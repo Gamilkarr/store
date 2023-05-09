@@ -2,25 +2,26 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"github.com/Gamilkarr/store/internal/handlers"
-	"github.com/Gamilkarr/store/internal/repository"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"io"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
 	"net/rpc/jsonrpc"
+
+	"github.com/Gamilkarr/store/internal/handlers"
+	"github.com/Gamilkarr/store/internal/repository"
 )
 
 func main() {
+	ctx := context.Background()
 	DBurl := "postgres://postgres:postgres@localhost:5432/storage"
-	conn, err := pgx.Connect(context.Background(), DBurl)
+	conn, err := pgxpool.New(ctx, DBurl)
 	if err != nil {
-		fmt.Print(err)
+		log.Fatal(err)
 	}
-	defer conn.Close(context.Background())
+	defer conn.Close()
 
 	server := rpc.NewServer()
 	if err := server.Register(&handlers.Store{
@@ -31,7 +32,7 @@ func main() {
 
 	lis, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
-		log.Fatalf("net.Listen tcp :0: %v", err)
+		log.Fatal(err)
 	}
 	go server.Accept(lis)
 
@@ -43,9 +44,9 @@ func main() {
 		w.Header().Set("Content-type", "application/json")
 		if err := server.ServeRequest(serverCodec); err != nil {
 			log.Printf("Error while serving JSON request: %v", err)
-			http.Error(w, `{"error":"cant serve request"}`, 500)
+			http.Error(w, "can not serve request", http.StatusInternalServerError)
 		} else {
-			w.WriteHeader(200)
+			w.WriteHeader(http.StatusOK)
 		}
 	})
 	log.Fatal(http.ListenAndServe("127.0.0.1:8081", nil))

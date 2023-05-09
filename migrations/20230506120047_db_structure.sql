@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS items(
     size INTEGER,
     quantity INTEGER
 );
-CREATE TABLE IF NOT EXISTS store_availability(
+CREATE TABLE IF NOT EXISTS available(
     store_id INTEGER NOT NULL,
     item_id INTEGER NOT NULL,
     item_quantity INTEGER NOT NULL DEFAULT 0,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS store_availability(
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE store_availability;
+DROP TABLE available;
 DROP TABLE stores;
 DROP TABLE items;
 -- +goose StatementEnd
