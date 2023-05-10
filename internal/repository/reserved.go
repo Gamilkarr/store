@@ -23,7 +23,7 @@ func (r *Repository) ItemReserved(ctx context.Context, storeID int64, items []mo
 
 	err = tx.QueryRow(ctx, isStoreAvailable, storeID).Scan(&isAvailable)
 	if err != nil {
-		return err
+		return errors.New("this store does not exist")
 	}
 
 	if !isAvailable {
@@ -34,7 +34,7 @@ func (r *Repository) ItemReserved(ctx context.Context, storeID int64, items []mo
 		var resItemID int64
 		err := tx.QueryRow(ctx, q, storeID, item.ItemID, item.Quantity).Scan(&resItemID)
 		if err != nil {
-			return err
+			return errors.New("failed to reserve an item")
 		}
 	}
 	err = tx.Commit(ctx)

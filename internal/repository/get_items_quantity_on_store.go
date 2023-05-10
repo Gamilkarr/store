@@ -23,7 +23,7 @@ func (r *Repository) GetItemsQuantityOnStore(ctx context.Context, storeID int64)
 
 	err = tx.QueryRow(ctx, isStoreAvailable, storeID).Scan(&isAvailable)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("this store does not exist")
 	}
 
 	if !isAvailable {

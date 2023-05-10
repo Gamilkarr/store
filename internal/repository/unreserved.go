@@ -24,7 +24,7 @@ func (r *Repository) ItemUnreserved(ctx context.Context, storeID int64, items []
 
 	err = tx.QueryRow(ctx, isStoreAvailable, storeID).Scan(&isAvailable)
 	if err != nil {
-		return err
+		return errors.New("this store does not exist")
 	}
 
 	if !isAvailable {
@@ -35,7 +35,7 @@ func (r *Repository) ItemUnreserved(ctx context.Context, storeID int64, items []
 		var resItemID int64
 		err := tx.QueryRow(ctx, q, storeID, item.ItemID, item.Quantity).Scan(&resItemID)
 		if err != nil {
-			return err
+			return errors.New("failed to unreserve an item")
 		}
 	}
 	err = tx.Commit(ctx)
