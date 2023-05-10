@@ -1,5 +1,3 @@
--- +goose Up
--- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS stores(
     id SERIAL PRIMARY KEY,
     name VARCHAR(20),
@@ -19,11 +17,3 @@ CREATE TABLE IF NOT EXISTS available(
     FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
 );
--- +goose StatementEnd
-
--- +goose Down
--- +goose StatementBegin
-DROP TABLE available;
-DROP TABLE stores;
-DROP TABLE items;
--- +goose StatementEnd

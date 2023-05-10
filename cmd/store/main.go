@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/Gamilkarr/store/internal/handlers"
+	"github.com/Gamilkarr/store/internal/repository"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"io"
 	"log"
@@ -9,19 +11,20 @@ import (
 	"net/http"
 	"net/rpc"
 	"net/rpc/jsonrpc"
-
-	"github.com/Gamilkarr/store/internal/handlers"
-	"github.com/Gamilkarr/store/internal/repository"
+	"os"
 )
 
 func main() {
 	ctx := context.Background()
-	DBurl := "postgres://postgres:postgres@localhost:5432/storage"
-	conn, err := pgxpool.New(ctx, DBurl)
+	conn, err := pgxpool.New(ctx, os.Getenv("DB_DSN"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer conn.Close()
+
+	if err = conn.Ping(ctx); err != nil {
+		log.Fatal(err)
+	}
 
 	server := rpc.NewServer()
 	if err := server.Register(&handlers.Store{
@@ -30,7 +33,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	lis, err := net.Listen("tcp", "127.0.0.1:0")
+	lis, err := net.Listen("tcp", ":0")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,8 +52,8 @@ func main() {
 			w.WriteHeader(http.StatusOK)
 		}
 	})
-	log.Fatal(http.ListenAndServe("127.0.0.1:8081", nil))
-
+	log.Print("Start")
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
 
 type httpConn struct {

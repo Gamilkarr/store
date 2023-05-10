@@ -1,13 +1,49 @@
 version: '3.1'
 
 services:
-
+  store:
+    build:
+      context: .
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_DSN=postgres://postgres:postgres@db:5432/storage
+    depends_on:
+      - db
+    networks:
+      - db-network
+    restart: on-failure
   db:
     image: postgres
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: "storage"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
     ports:
-      - 5432:5432
+      - "5432:5432"
+    networks:
+      - db-network
+
+  migrate:
+    image: migrate/migrate
+    volumes:
+      - ./db/migrations:/migrations
+    entrypoint:
+      - "migrate"
+      - "-path"
+      - "/migrations"
+      - "-database"
+      - "postgres://postgres:postgres@db:5432/storage?sslmode=disable"
+    command:
+      - "up"
+    depends_on:
+      - db
+    restart: on-failure
+    links:
+      - db
+    networks:
+      - db-network
+
+networks:
+  db-network:

@@ -1,0 +1,1 @@
+TRUNCATE available, stores, items RESTART IDENTITY;
